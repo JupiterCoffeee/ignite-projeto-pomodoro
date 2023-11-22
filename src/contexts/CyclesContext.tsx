@@ -1,4 +1,4 @@
-import { createContext, useState, useReducer } from "react";
+import { createContext, useState, useReducer, useEffect } from "react";
 
 interface createCycleData {
     task: string
@@ -78,8 +78,19 @@ export function CyclesContextProvider({
     {
         cycles: [],
         activeCycleId: null
+    }, (initialState) => {
+        const storedStateAsJSON = localStorage.getItem('@ignite-timer:cyclesState-1.0.0')
+        if (storedStateAsJSON) {
+            return JSON.parse(storedStateAsJSON)
+        }
+        return initialState
     }
     )
+
+    useEffect (() => {
+        const stateJSON = JSON.stringify(cyclesState)
+        localStorage.setItem('@ignite-timer:cyclesState-1.0.0', stateJSON)
+    }, [cyclesState])
 
     const [amountSecondsPassed, setAmountSecondsPassed] = useState(0) 
 
